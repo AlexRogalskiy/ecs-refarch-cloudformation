@@ -67,7 +67,7 @@ Resources:
         DesiredCount: 2
         Listener: !GetAtt ALB.Outputs.Listener
         Path: /products
-        Image: octopusdeploy/ecs-website-service-example:1.0.0
+        Image: octopusdeploy/ecs-website-service-example:#{Octopus.Action[Packages].Package[ecs-website-service-example].PackageVersion}
 
   WebsiteService:
     Type: AWS::CloudFormation::Stack
@@ -82,7 +82,7 @@ Resources:
         Listener: !GetAtt ALB.Outputs.Listener
         Path: /
         ECSServiceAutoScalingRoleARN: !GetAtt ECS.Outputs.ECSServiceAutoScalingRole
-        Image: octopusdeploy/ecs-product-service-example:1.0.0
+        Image: octopusdeploy/ecs-product-service-example:#{Octopus.Action[Packages].Package[ecs-product-service-example].PackageVersion}
 
   LifecycleHook:
     Type: AWS::CloudFormation::Stack
