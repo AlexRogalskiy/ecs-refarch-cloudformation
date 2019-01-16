@@ -14,6 +14,16 @@ Description: >
   Last Modified: 22nd September 2016
   Author: Paul Maddox <pmaddox@amazon.com>
 
+Parameters:
+  ProductImageVersion:
+    Description: The version of the product docker image
+    Type: String
+    Default: "#{Octopus.Action[Packages].Package[ecs-product-service-example].PackageVersion}"
+  WebsiteImageVersion:
+    Description: The version of the website docker image
+    Type: String
+    Default: "#{Octopus.Action[Packages].Package[ecs-website-service-example].PackageVersion}"
+
 Resources:
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -38,7 +48,7 @@ Resources:
   ALB:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: infrastructure/load-balancers.yaml
+      TemplateURL: https://s3.amazonaws.com/octopus-cloudformation-templates/ecs-refarch-cloudformation/infrastructure/load-balancers.yaml
       Parameters:
         EnvironmentName: !Ref AWS::StackName
         VPC: !GetAtt VPC.Outputs.VPC
@@ -67,7 +77,7 @@ Resources:
         DesiredCount: 2
         Listener: !GetAtt ALB.Outputs.Listener
         Path: /products
-        Image: octopusdeploy/ecs-website-service-example:#{Octopus.Action[Packages].Package[ecs-website-service-example].PackageVersion}
+        Image: !Join ["", ["octopusdeploy/ecs-website-service-example:", !Ref ProductImageVersion]]
 
   WebsiteService:
     Type: AWS::CloudFormation::Stack
@@ -82,7 +92,7 @@ Resources:
         Listener: !GetAtt ALB.Outputs.Listener
         Path: /
         ECSServiceAutoScalingRoleARN: !GetAtt ECS.Outputs.ECSServiceAutoScalingRole
-        Image: octopusdeploy/ecs-product-service-example:#{Octopus.Action[Packages].Package[ecs-product-service-example].PackageVersion}
+        Image: !Join ["", ["octopusdeploy/ecs-product-service-example:", !Ref WebsiteImageVersion]]
 
   LifecycleHook:
     Type: AWS::CloudFormation::Stack
