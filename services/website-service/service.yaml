@@ -38,6 +38,10 @@ Parameters:
     Description: The ECS service auto scaling role ARN
     Type: String
 
+  Image:
+    Description: Please provide the Docker image that contains the service
+    Type: String
+
 Resources:
   Service:
     Type: AWS::ECS::Service
@@ -59,7 +63,7 @@ Resources:
       ContainerDefinitions:
         - Name: website-service
           Essential: true
-          Image: 275396840892.dkr.ecr.us-east-1.amazonaws.com/ecs-refarch-cloudformation/website-service:1.0.0
+          Image: !Ref Image
           Memory: 128
           Environment:
             - Name: PRODUCT_SERVICE_URL
