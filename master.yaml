@@ -67,7 +67,7 @@ Resources:
         DesiredCount: 2
         Listener: !GetAtt ALB.Outputs.Listener
         Path: /products
-        Image: 275396840892.dkr.ecr.us-east-1.amazonaws.com/ecs-refarch-cloudformation/product-service:1.0.0
+        Image: octopusdeploy/ecs-website-service-example:1.0.0
 
   WebsiteService:
     Type: AWS::CloudFormation::Stack
@@ -82,7 +82,7 @@ Resources:
         Listener: !GetAtt ALB.Outputs.Listener
         Path: /
         ECSServiceAutoScalingRoleARN: !GetAtt ECS.Outputs.ECSServiceAutoScalingRole
-        Image: 275396840892.dkr.ecr.us-east-1.amazonaws.com/ecs-refarch-cloudformation/website-service:1.0.0
+        Image: octopusdeploy/ecs-product-service-example:1.0.0
 
   LifecycleHook:
     Type: AWS::CloudFormation::Stack

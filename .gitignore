@@ -1,2 +1,4 @@
 .idea
 *.iml
+services/product-service/src/app
+services/website-service/src/app
